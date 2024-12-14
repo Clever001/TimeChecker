@@ -1,5 +1,5 @@
 ﻿namespace TimeChecker {
-    partial class Form1 {
+    partial class MainForm {
         /// <summary>
         ///  Required designer variable.
         /// </summary>
@@ -23,32 +23,34 @@
         ///  the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
-            button1 = new Button();
+            TimeLabel = new Label();
             SuspendLayout();
             // 
-            // button1
+            // TimeLabel
             // 
-            button1.Location = new Point(357, 214);
-            button1.Name = "button1";
-            button1.Size = new Size(75, 23);
-            button1.TabIndex = 0;
-            button1.Text = "Click me!";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            TimeLabel.AutoSize = true;
+            TimeLabel.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            TimeLabel.Location = new Point(358, 205);
+            TimeLabel.Name = "TimeLabel";
+            TimeLabel.Size = new Size(90, 37);
+            TimeLabel.TabIndex = 0;
+            TimeLabel.Text = "label1";
             // 
-            // Form1
+            // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
-            Controls.Add(button1);
-            Name = "Form1";
+            Controls.Add(TimeLabel);
+            Name = "MainForm";
             Text = "Form1";
+            Load += MainForm_Load;
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
-        private Button button1;
+        private Label TimeLabel;
     }
 }
