@@ -23,34 +23,59 @@
         ///  the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            components = new System.ComponentModel.Container();
             TimeLabel = new Label();
+            contextMenuStrip = new ContextMenuStrip(components);
+            dateSettingToolStripMenuItem = new ToolStripMenuItem();
+            contextMenuStrip.SuspendLayout();
             SuspendLayout();
             // 
             // TimeLabel
             // 
-            TimeLabel.AutoSize = true;
-            TimeLabel.Font = new Font("Segoe UI", 20.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            TimeLabel.Location = new Point(358, 205);
+            TimeLabel.Anchor = AnchorStyles.None;
+            TimeLabel.Font = new Font("Segoe UI", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            TimeLabel.ForeColor = Color.White;
+            TimeLabel.Location = new Point(12, 9);
             TimeLabel.Name = "TimeLabel";
-            TimeLabel.Size = new Size(90, 37);
+            TimeLabel.Size = new Size(224, 110);
             TimeLabel.TabIndex = 0;
             TimeLabel.Text = "label1";
+            TimeLabel.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // contextMenuStrip
+            // 
+            contextMenuStrip.Items.AddRange(new ToolStripItem[] { dateSettingToolStripMenuItem });
+            contextMenuStrip.Name = "contextMenuStrip1";
+            contextMenuStrip.Size = new Size(165, 26);
+            // 
+            // dateSettingToolStripMenuItem
+            // 
+            dateSettingToolStripMenuItem.Name = "dateSettingToolStripMenuItem";
+            dateSettingToolStripMenuItem.Size = new Size(164, 22);
+            dateSettingToolStripMenuItem.Text = "Отобразить дату";
+            dateSettingToolStripMenuItem.Click += dateSettingToolStripMenuItem_Click;
             // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            BackColor = SystemColors.ActiveCaption;
+            ClientSize = new Size(248, 128);
+            ContextMenuStrip = contextMenuStrip;
             Controls.Add(TimeLabel);
+            MinimumSize = new Size(200, 150);
             Name = "MainForm";
-            Text = "Form1";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "TimeChecker";
             Load += MainForm_Load;
+            contextMenuStrip.ResumeLayout(false);
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
 
         private Label TimeLabel;
+        private ContextMenuStrip contextMenuStrip;
+        private ToolStripMenuItem dateSettingToolStripMenuItem;
     }
 }
