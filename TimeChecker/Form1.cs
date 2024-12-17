@@ -7,29 +7,19 @@ namespace TimeChecker {
         private MenuAttrs _menuAttrs;
         private readonly object _locker = new();
 
-        private readonly ToolStripMenuItem[] _fontSizeMenus;
-
         public MainForm() {
             InitializeComponent();
-            _fontSizeMenus = [
-                smallToolStripMenuItem,
-                mediumToolStripMenuItem,
-                bigToolStripMenuItem,
-                hugeToolStripMenuItem
-            ];
         }
 
         private void MainForm_Load(object sender, EventArgs e) {
             // Инициализация атрибутов меню
             _menuAttrs = new() {
-                //PrintDate = true
+
             };
             UpdateFont();
 
             // Инициализация контекстного меню
             dateSettingToolStripMenuItem.Checked = false;
-            mediumToolStripMenuItem.Checked = true;
-
             // Инициализация часов
             _clock = new() {
                 Condition = CallCondition
@@ -44,24 +34,6 @@ namespace TimeChecker {
         private void UpdateFont() {
             TimeLabel.Font = _menuAttrs.Font;
             TimeLabel.Refresh();
-            Array.ForEach(_fontSizeMenus, menu => menu.Checked = false);
-            switch (_menuAttrs.FontSize) {
-                case (float)FontSize.Small:
-                    smallToolStripMenuItem.Checked = true;
-                    break;
-                case (float)FontSize.Medium:
-                    mediumToolStripMenuItem.Checked = true;
-                    break;
-                case (float)FontSize.Big:
-                    bigToolStripMenuItem.Checked = true;
-                    break;
-                case (float)FontSize.Huge:
-                    hugeToolStripMenuItem.Checked = true;
-                    break;
-                default:
-                    MessageBox.Show("Возникла проблема с установкой размера шрифта.", "ERROR");
-                    throw new ArgumentOutOfRangeException(nameof(_menuAttrs.FontSize));
-            }
         }
 
         private void OnCurTimeChanged(DateTime dt) {
@@ -106,40 +78,12 @@ namespace TimeChecker {
             OnCurTimeChanged(DateTime.Now);
         }
 
-        private void smallToolStripMenuItem_Click(object sender, EventArgs e) {
+        private void selectFontToolStripMenuItem_Click(object sender, EventArgs e) {
+            fontDialog.ShowDialog();
             lock (_locker) {
-                _menuAttrs.FontSize = (float)FontSize.Small;
+                _menuAttrs.Font = fontDialog.Font;
                 UpdateFont();
             }
-        }
-
-        private void mediumToolStripMenuItem_Click(object sender, EventArgs e) {
-            lock (_locker) {
-                _menuAttrs.FontSize = (float)FontSize.Medium;
-                UpdateFont();
-            }
-        }
-
-        private void bigToolStripMenuItem_Click(object sender, EventArgs e) {
-            lock (_locker) {
-                _menuAttrs.FontSize = (float)FontSize.Big;
-                UpdateFont();
-            }
-        }
-
-        private void hugeToolStripMenuItem_Click(object sender, EventArgs e) {
-            lock (_locker) {
-                _menuAttrs.FontSize = (float)FontSize.Huge;
-                UpdateFont();
-            }
-        }
-
-        private void makeBoldToolStripMenuItem_Click(object sender, EventArgs e) {
-            lock (_locker) {
-                _menuAttrs.Bold = !_menuAttrs.Bold;
-                UpdateFont();
-            }
-            makeBoldToolStripMenuItem.Checked = !makeBoldToolStripMenuItem.Checked;
         }
     }
 }

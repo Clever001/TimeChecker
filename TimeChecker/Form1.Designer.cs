@@ -27,12 +27,8 @@
             TimeLabel = new Label();
             contextMenuStrip = new ContextMenuStrip(components);
             dateSettingToolStripMenuItem = new ToolStripMenuItem();
-            makeBoldToolStripMenuItem = new ToolStripMenuItem();
-            fontSizeMenu = new ToolStripMenuItem();
-            smallToolStripMenuItem = new ToolStripMenuItem();
-            mediumToolStripMenuItem = new ToolStripMenuItem();
-            bigToolStripMenuItem = new ToolStripMenuItem();
-            hugeToolStripMenuItem = new ToolStripMenuItem();
+            selectFontToolStripMenuItem = new ToolStripMenuItem();
+            fontDialog = new FontDialog();
             contextMenuStrip.SuspendLayout();
             SuspendLayout();
             // 
@@ -50,58 +46,23 @@
             // 
             // contextMenuStrip
             // 
-            contextMenuStrip.Items.AddRange(new ToolStripItem[] { dateSettingToolStripMenuItem, makeBoldToolStripMenuItem, fontSizeMenu });
+            contextMenuStrip.Items.AddRange(new ToolStripItem[] { dateSettingToolStripMenuItem, selectFontToolStripMenuItem });
             contextMenuStrip.Name = "contextMenuStrip1";
-            contextMenuStrip.Size = new Size(172, 70);
+            contextMenuStrip.Size = new Size(165, 48);
             // 
             // dateSettingToolStripMenuItem
             // 
             dateSettingToolStripMenuItem.Name = "dateSettingToolStripMenuItem";
-            dateSettingToolStripMenuItem.Size = new Size(171, 22);
+            dateSettingToolStripMenuItem.Size = new Size(164, 22);
             dateSettingToolStripMenuItem.Text = "Отобразить дату";
             dateSettingToolStripMenuItem.Click += dateSettingToolStripMenuItem_Click;
             // 
-            // makeBoldToolStripMenuItem
+            // selectFontToolStripMenuItem
             // 
-            makeBoldToolStripMenuItem.Name = "makeBoldToolStripMenuItem";
-            makeBoldToolStripMenuItem.Size = new Size(171, 22);
-            makeBoldToolStripMenuItem.Text = "Сделать жирным";
-            makeBoldToolStripMenuItem.Click += makeBoldToolStripMenuItem_Click;
-            // 
-            // fontSizeMenu
-            // 
-            fontSizeMenu.DropDownItems.AddRange(new ToolStripItem[] { smallToolStripMenuItem, mediumToolStripMenuItem, bigToolStripMenuItem, hugeToolStripMenuItem });
-            fontSizeMenu.Name = "fontSizeMenu";
-            fontSizeMenu.Size = new Size(171, 22);
-            fontSizeMenu.Text = "Изменить размер";
-            // 
-            // smallToolStripMenuItem
-            // 
-            smallToolStripMenuItem.Name = "smallToolStripMenuItem";
-            smallToolStripMenuItem.Size = new Size(180, 22);
-            smallToolStripMenuItem.Text = "Маленький";
-            smallToolStripMenuItem.Click += smallToolStripMenuItem_Click;
-            // 
-            // mediumToolStripMenuItem
-            // 
-            mediumToolStripMenuItem.Name = "mediumToolStripMenuItem";
-            mediumToolStripMenuItem.Size = new Size(180, 22);
-            mediumToolStripMenuItem.Text = "Стандартный";
-            mediumToolStripMenuItem.Click += mediumToolStripMenuItem_Click;
-            // 
-            // bigToolStripMenuItem
-            // 
-            bigToolStripMenuItem.Name = "bigToolStripMenuItem";
-            bigToolStripMenuItem.Size = new Size(180, 22);
-            bigToolStripMenuItem.Text = "Большой";
-            bigToolStripMenuItem.Click += bigToolStripMenuItem_Click;
-            // 
-            // hugeToolStripMenuItem
-            // 
-            hugeToolStripMenuItem.Name = "hugeToolStripMenuItem";
-            hugeToolStripMenuItem.Size = new Size(180, 22);
-            hugeToolStripMenuItem.Text = "Самый большой";
-            hugeToolStripMenuItem.Click += hugeToolStripMenuItem_Click;
+            selectFontToolStripMenuItem.Name = "selectFontToolStripMenuItem";
+            selectFontToolStripMenuItem.Size = new Size(164, 22);
+            selectFontToolStripMenuItem.Text = "Выбрать шрифт";
+            selectFontToolStripMenuItem.Click += selectFontToolStripMenuItem_Click;
             // 
             // MainForm
             // 
@@ -125,11 +86,7 @@
         private Label TimeLabel;
         private ContextMenuStrip contextMenuStrip;
         private ToolStripMenuItem dateSettingToolStripMenuItem;
-        private ToolStripMenuItem fontSizeMenu;
-        private ToolStripMenuItem smallToolStripMenuItem;
-        private ToolStripMenuItem mediumToolStripMenuItem;
-        private ToolStripMenuItem bigToolStripMenuItem;
-        private ToolStripMenuItem hugeToolStripMenuItem;
-        private ToolStripMenuItem makeBoldToolStripMenuItem;
+        private ToolStripMenuItem selectFontToolStripMenuItem;
+        private FontDialog fontDialog;
     }
 }
