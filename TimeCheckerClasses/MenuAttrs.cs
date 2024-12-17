@@ -1,12 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace TimeCheckerClasses;
 public struct MenuAttrs : ICloneable {
     public bool PrintDate { get; set; } = false;
+    [JsonIgnore]
     public Font Font { get; set; } = new("Segoe UI", 20f);
+    public SerializableFont SerializableFont {
+        get => new(Font);
+        set => Font = value.ToFont();
+    }
     public RepeatFreq RepeatFreq { get; set; } = RepeatFreq.FiveMinutes;
     public int WaitTime {
         get => _waitTime;
@@ -15,9 +24,10 @@ public struct MenuAttrs : ICloneable {
             _waitTime = value;
         }
     }
-
+    [JsonIgnore]
     private int _waitTime = 1;
 
+    [JsonIgnore]
     public int RepeatFreqIndex => RepeatFreq switch {
         RepeatFreq.FiveMinutes => 0,
         RepeatFreq.FiveteenMinutes => 1,
@@ -28,8 +38,9 @@ public struct MenuAttrs : ICloneable {
     };
     
     public MenuAttrs() { }
+    [JsonConstructor]
     public MenuAttrs(bool printDate, Font font, RepeatFreq repeatFreq, int waitTime) {
-        if (waitTime < 0 || waitTime > 3) throw new ArgumentOutOfRangeException(nameof(WaitTime));
+        if (waitTime < 0 || waitTime > 4) throw new ArgumentOutOfRangeException(nameof(WaitTime));
 
         PrintDate = printDate;
         Font = font;
@@ -38,6 +49,24 @@ public struct MenuAttrs : ICloneable {
     }
 
     public object Clone() => new MenuAttrs(PrintDate, Font, RepeatFreq, WaitTime);
+
+    public static void Save(MenuAttrs menuAttrs) {
+        string json = JsonSerializer.Serialize(menuAttrs, new JsonSerializerOptions {
+            WriteIndented = true
+        });
+        File.WriteAllText("settings.json", json);
+    }
+
+    public static MenuAttrs Load() {
+        if (!File.Exists("settings.json")) return new();
+
+        try {
+            string json = File.ReadAllText("settings.json");
+            return JsonSerializer.Deserialize<MenuAttrs>(json);
+        } catch {
+            return new();
+        }
+    }
 }
 
 public enum RepeatFreq : int {

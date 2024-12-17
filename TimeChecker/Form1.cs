@@ -1,4 +1,5 @@
 using System.Text;
+using System.Threading;
 using TimeCheckerClasses;
 
 namespace TimeChecker {
@@ -6,6 +7,7 @@ namespace TimeChecker {
         private Clock? _clock;
         private MenuAttrs _menuAttrs;
         private readonly object _locker = new();
+        CancellationTokenSource _cancellationTokenSource = new();
 
         public MainForm() {
             InitializeComponent();
@@ -13,9 +15,7 @@ namespace TimeChecker {
 
         private void MainForm_Load(object sender, EventArgs e) {
             // Инициализация атрибутов меню
-            _menuAttrs = new() {
-
-            };
+            _menuAttrs = MenuAttrs.Load();
             UpdateFont();
 
             // Инициализация контекстного меню
@@ -34,7 +34,7 @@ namespace TimeChecker {
         public void InitClockCondition() {
             if (_clock is null) throw new ArgumentNullException(nameof(_clock));
             int waitTime = _menuAttrs.WaitTime, repeatFreq = (int)_menuAttrs.RepeatFreq;
-            _clock.ChangeCondition((dt) => (dt.Hour * 60 + dt.Minute + waitTime) % repeatFreq == 0 && dt.Second == 0);
+            _clock.ChangeCondition((dt) => (dt.Second == 0 && (dt.Hour * 60 + dt.Minute + waitTime) % repeatFreq == 0));
         }
 
         private void UpdateFont() {
@@ -69,7 +69,11 @@ namespace TimeChecker {
             lock(_locker) { waitTime = _menuAttrs.WaitTime; }
             TimeLabel.ForeColor = Color.Red;
             TimeLabel.Refresh();
-            await Task.Delay(1000 * 60 * waitTime);
+            try {
+                await Task.Delay(Math.Max(1000 * 60 * waitTime, 60000), _cancellationTokenSource.Token);
+            } catch (TaskCanceledException) {
+                // Программа закрывается.
+            }
             TimeLabel.ForeColor = Color.White;
             TimeLabel.Refresh();
         }
@@ -106,6 +110,10 @@ namespace TimeChecker {
                         return;
                     }
                 }
+                //Task.Run(() => {
+                //    MenuAttrs.Save(_menuAttrs);
+                //});
+
                 MessageBox.Show("Настройки успешно сохранены.", "Настройки");
             }
             else {
@@ -114,6 +122,8 @@ namespace TimeChecker {
         }
 
         private void MainForm_FormClosing_1(object sender, FormClosingEventArgs e) {
+            _cancellationTokenSource.Cancel();
+            MenuAttrs.Save(_menuAttrs);
             _clock?.Dispose();
         }
     }
