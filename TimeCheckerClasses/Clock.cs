@@ -14,13 +14,20 @@ public class Clock : IDisposable {
     //    _mainTask = Task.Run(() => MainAsync(_tokenSource.Token));
     //}
 
-    public Predicate<DateTime>? Condition { get; set; } = null;
+    public Predicate<DateTime>? Condition { get; private set; } = null;
 
     public event Action<DateTime>? CurTimeChanged;
     public event Action<DateTime>? TrueCondition;
 
     public void StartClock() {
         _mainTask = Task.Run(() => MainLoopAsync(_tokenSource.Token));
+    }
+
+    public void ChangeCondition(Predicate<DateTime> condition) {
+        if (condition is null) throw new ArgumentNullException(nameof(condition));
+        lock (_locker) {
+            Condition = condition;
+        }
     }
 
     private async Task MainLoopAsync(CancellationToken token) {
@@ -33,9 +40,11 @@ public class Clock : IDisposable {
 
         while (!token.IsCancellationRequested) {
             DateTime now = DateTime.Now;
-            CurTimeChanged?.Invoke(now);
-            if (Condition?.Invoke(now) == true) {
-                TrueCondition?.Invoke(now);
+            lock (_locker) {
+                CurTimeChanged?.Invoke(now);
+                if (Condition?.Invoke(now) == true) {
+                    TrueCondition?.Invoke(now);
+                }
             }
             await Task.Delay(1000, token);
         }

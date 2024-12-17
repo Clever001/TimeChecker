@@ -26,6 +26,7 @@
             components = new System.ComponentModel.Container();
             TimeLabel = new Label();
             contextMenuStrip = new ContextMenuStrip(components);
+            settingsToolStripMenuItem = new ToolStripMenuItem();
             dateSettingToolStripMenuItem = new ToolStripMenuItem();
             selectFontToolStripMenuItem = new ToolStripMenuItem();
             fontDialog = new FontDialog();
@@ -46,9 +47,16 @@
             // 
             // contextMenuStrip
             // 
-            contextMenuStrip.Items.AddRange(new ToolStripItem[] { dateSettingToolStripMenuItem, selectFontToolStripMenuItem });
+            contextMenuStrip.Items.AddRange(new ToolStripItem[] { settingsToolStripMenuItem, dateSettingToolStripMenuItem, selectFontToolStripMenuItem });
             contextMenuStrip.Name = "contextMenuStrip1";
-            contextMenuStrip.Size = new Size(165, 48);
+            contextMenuStrip.Size = new Size(165, 70);
+            // 
+            // settingsToolStripMenuItem
+            // 
+            settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            settingsToolStripMenuItem.Size = new Size(164, 22);
+            settingsToolStripMenuItem.Text = "Настройки";
+            settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
             // 
             // dateSettingToolStripMenuItem
             // 
@@ -76,6 +84,7 @@
             Name = "MainForm";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "TimeChecker";
+            FormClosing += MainForm_FormClosing_1;
             Load += MainForm_Load;
             contextMenuStrip.ResumeLayout(false);
             ResumeLayout(false);
@@ -88,5 +97,6 @@
         private ToolStripMenuItem dateSettingToolStripMenuItem;
         private ToolStripMenuItem selectFontToolStripMenuItem;
         private FontDialog fontDialog;
+        private ToolStripMenuItem settingsToolStripMenuItem;
     }
 }
