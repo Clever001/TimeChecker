@@ -56,11 +56,10 @@ public class Clock : IDisposable {
 
     public void Dispose() {
         _tokenSource.Cancel();
-        try {
-            _mainTask?.Wait();
-        }
-        catch (AggregateException ex) when (ex.InnerExceptions.All(e => e is TaskCanceledException)) {
-            // Игнорируем исключение отмены задачи
-        }
+        _mainTask?.ContinueWith(t => {
+            if (t.Exception != null && t.Exception.InnerExceptions.All(e => e is TaskCanceledException)) {
+                // Игнорируем ошибки отмены
+            }
+        }, TaskContinuationOptions.OnlyOnFaulted);
     }
 }

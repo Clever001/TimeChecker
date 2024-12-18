@@ -82,7 +82,7 @@
             Controls.Add(TimeLabel);
             MinimumSize = new Size(160, 80);
             Name = "MainForm";
-            StartPosition = FormStartPosition.CenterScreen;
+            StartPosition = FormStartPosition.Manual;
             Text = "TimeChecker";
             FormClosing += MainForm_FormClosing_1;
             Load += MainForm_Load;

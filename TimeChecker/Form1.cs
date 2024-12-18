@@ -4,6 +4,7 @@ using TimeCheckerClasses;
 
 namespace TimeChecker {
     public partial class MainForm : Form {
+        private MainFormAttrs _mainFormAttrs;
         private Clock? _clock;
         private MenuAttrs _menuAttrs;
         private readonly object _locker = new();
@@ -14,6 +15,10 @@ namespace TimeChecker {
         }
 
         private void MainForm_Load(object sender, EventArgs e) {
+            _mainFormAttrs = MainFormAttrs.Load();
+            ClientSize = _mainFormAttrs.Size;
+            Location = _mainFormAttrs.Point;
+
             // Инициализация атрибутов меню
             _menuAttrs = MenuAttrs.Load();
             UpdateFont();
@@ -93,6 +98,7 @@ namespace TimeChecker {
         }
 
         private void selectFontToolStripMenuItem_Click(object sender, EventArgs e) {
+            fontDialog.Font = _menuAttrs.Font;
             fontDialog.ShowDialog();
             lock (_locker) {
                 _menuAttrs.Font = fontDialog.Font;
@@ -128,6 +134,9 @@ namespace TimeChecker {
         }
 
         private void MainForm_FormClosing_1(object sender, FormClosingEventArgs e) {
+            _mainFormAttrs.Size = ClientSize;
+            _mainFormAttrs.Point = Location;
+            MainFormAttrs.Save(_mainFormAttrs);
             MenuAttrs.Save(_menuAttrs);
             _cancellationTokenSource.Cancel();
             _clock?.Dispose();
