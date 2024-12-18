@@ -10,10 +10,6 @@ public class Clock : IDisposable {
     private readonly CancellationTokenSource _tokenSource = new();
     private Task? _mainTask = null;
 
-    //public Clock() {
-    //    _mainTask = Task.Run(() => MainAsync(_tokenSource.Token));
-    //}
-
     public Predicate<DateTime>? Condition { get; private set; } = null;
 
     public event Action<DateTime, CancellationToken?>? CurTimeChanged;
@@ -38,23 +34,31 @@ public class Clock : IDisposable {
             _isRunning = true;
         }
 
-        while (!token.IsCancellationRequested) {
-            DateTime now = DateTime.Now;
-            lock (_locker) {
-                CurTimeChanged?.Invoke(now, token);
-                if (Condition?.Invoke(now) == true) {
-                    TrueCondition?.Invoke(now, token);
+        try {
+            DateTime lastTime = DateTime.Now.AddSeconds(-1);
+
+            while (!token.IsCancellationRequested) {
+                DateTime now = DateTime.Now;
+
+                if (now.Second != lastTime.Second) {
+                    lock (_locker) {
+                        CurTimeChanged?.Invoke(now, token);
+
+                        if (Condition?.Invoke(now) == true) {
+                            TrueCondition?.Invoke(now, token);
+                        }
+                    }
+                    lastTime = now;
                 }
+
+                int msToNextHalfSecond = 500 - (now.Millisecond % 500);
+                await Task.Delay(msToNextHalfSecond, token);
             }
-
-            DateTime nextTick = now.AddSeconds(1);
-            TimeSpan delay = nextTick - DateTime.Now;
-
-            await Task.Delay(delay, token);
         }
-
-        lock (_locker) {
-            _isRunning = false;
+        finally {
+            lock (_locker) {
+                _isRunning = false;
+            }
         }
     }
 
