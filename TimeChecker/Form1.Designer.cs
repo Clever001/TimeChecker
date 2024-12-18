@@ -84,6 +84,7 @@
             Name = "MainForm";
             StartPosition = FormStartPosition.Manual;
             Text = "TimeChecker";
+            TopMost = true;
             FormClosing += MainForm_FormClosing_1;
             Load += MainForm_Load;
             contextMenuStrip.ResumeLayout(false);
