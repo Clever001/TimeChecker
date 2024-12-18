@@ -9,6 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="alarm.wav" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="alarm.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\TimeCheckerClasses\TimeCheckerClasses.csproj" />
   </ItemGroup>
 
