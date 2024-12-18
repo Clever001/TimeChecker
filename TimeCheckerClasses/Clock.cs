@@ -46,7 +46,11 @@ public class Clock : IDisposable {
                     TrueCondition?.Invoke(now, token);
                 }
             }
-            await Task.Delay(1000, token);
+
+            DateTime nextTick = now.AddSeconds(1);
+            TimeSpan delay = nextTick - DateTime.Now;
+
+            await Task.Delay(delay, token);
         }
 
         lock (_locker) {
