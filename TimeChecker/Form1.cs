@@ -42,29 +42,33 @@ namespace TimeChecker {
             TimeLabel.Refresh();
         }
 
-        private void OnCurTimeChanged(DateTime dt) {
+        private void OnCurTimeChanged(DateTime dt, CancellationToken? token) {
+            if (token?.IsCancellationRequested == true) return;
+
             if (InvokeRequired) {
-                Invoke(new Action<DateTime>(OnCurTimeChanged), dt);
+                if (IsHandleCreated && !IsDisposed) {
+                    BeginInvoke(new Action<DateTime, CancellationToken?>(OnCurTimeChanged), dt, token);
+                }
                 return;
             }
+
             lock (_locker) {
-                if (_menuAttrs.PrintDate) {
-                    StringBuilder output = new();
-                    output.AppendLine(dt.ToShortDateString());
-                    output.Append(dt.ToLongTimeString());
-                    TimeLabel.Text = output.ToString();
-                }
-                else {
-                    TimeLabel.Text = dt.ToLongTimeString();
-                }
+                TimeLabel.Text = _menuAttrs.PrintDate
+                    ? $"{dt.ToShortDateString()}\n{dt.ToLongTimeString()}"
+                    : dt.ToLongTimeString();
             }
         }
 
-        private async void OnTrueCondition(DateTime dt) {
+        private async void OnTrueCondition(DateTime dt, CancellationToken? token) {
+            if (token?.IsCancellationRequested == true) return;
+
             if (InvokeRequired) {
-                Invoke(new Action<DateTime>(OnTrueCondition), dt);
+                if (IsHandleCreated && !IsDisposed) {
+                    BeginInvoke(new Action<DateTime, CancellationToken?>(OnTrueCondition), dt, token);
+                }
                 return;
             }
+
             int waitTime;
             lock(_locker) { waitTime = _menuAttrs.WaitTime; }
             TimeLabel.ForeColor = Color.Red;
@@ -74,8 +78,10 @@ namespace TimeChecker {
             } catch (TaskCanceledException) {
                 // Программа закрывается.
             }
-            TimeLabel.ForeColor = Color.White;
-            TimeLabel.Refresh();
+            if (!_cancellationTokenSource.IsCancellationRequested) {
+                TimeLabel.ForeColor = Color.White;
+                TimeLabel.Refresh();
+            }
         }
 
         private bool CallCondition(DateTime dt) => dt.Second % 30 == 0;
@@ -83,7 +89,7 @@ namespace TimeChecker {
         private void dateSettingToolStripMenuItem_Click(object sender, EventArgs e) {
             lock (_locker) { _menuAttrs.PrintDate = !_menuAttrs.PrintDate; }
             dateSettingToolStripMenuItem.Checked = !dateSettingToolStripMenuItem.Checked;
-            OnCurTimeChanged(DateTime.Now);
+            OnCurTimeChanged(DateTime.Now, null);
         }
 
         private void selectFontToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -122,8 +128,8 @@ namespace TimeChecker {
         }
 
         private void MainForm_FormClosing_1(object sender, FormClosingEventArgs e) {
-            _cancellationTokenSource.Cancel();
             MenuAttrs.Save(_menuAttrs);
+            _cancellationTokenSource.Cancel();
             _clock?.Dispose();
         }
     }
