@@ -1,5 +1,4 @@
-using System.Text;
-using System.Threading;
+using System.Media;
 using TimeCheckerClasses;
 
 namespace TimeChecker {
@@ -7,6 +6,7 @@ namespace TimeChecker {
         private MainFormAttrs _mainFormAttrs;
         private Clock? _clock;
         private MenuAttrs _menuAttrs;
+        private SoundPlayer? _soundPlayer;
         private readonly object _locker = new();
         CancellationTokenSource _cancellationTokenSource = new();
 
@@ -34,6 +34,12 @@ namespace TimeChecker {
             _clock.TrueCondition += OnTrueCondition;
 
             _clock.StartClock();
+
+            try {
+                _soundPlayer = new SoundPlayer("alarm.wav");
+            } catch {
+                MessageBox.Show("Неудалось найти мелодию для воспроизведения!", "ERROR");
+            }
         }
 
         public void InitClockCondition() {
@@ -78,11 +84,17 @@ namespace TimeChecker {
             lock(_locker) { waitTime = _menuAttrs.WaitTime; }
             TimeLabel.ForeColor = Color.Red;
             TimeLabel.Refresh();
+
+            _soundPlayer?.Play();
+
             try {
                 await Task.Delay(Math.Max(1000 * 60 * waitTime, 60000), _cancellationTokenSource.Token);
             } catch (TaskCanceledException) {
                 // Программа закрывается.
             }
+
+            _soundPlayer?.Stop();
+
             if (!_cancellationTokenSource.IsCancellationRequested) {
                 TimeLabel.ForeColor = Color.White;
                 TimeLabel.Refresh();
