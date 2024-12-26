@@ -33,6 +33,8 @@
             closeToolStripMenuItem = new ToolStripMenuItem();
             fontDialog = new FontDialog();
             panel1 = new Panel();
+            colorDialog = new ColorDialog();
+            selectColorToolStripMenuItem = new ToolStripMenuItem();
             contextMenuStrip.SuspendLayout();
             SuspendLayout();
             // 
@@ -48,7 +50,7 @@
             // contextMenuStrip
             // 
             resources.ApplyResources(contextMenuStrip, "contextMenuStrip");
-            contextMenuStrip.Items.AddRange(new ToolStripItem[] { settingsToolStripMenuItem, dateSettingToolStripMenuItem, selectFontToolStripMenuItem, closeToolStripMenuItem });
+            contextMenuStrip.Items.AddRange(new ToolStripItem[] { settingsToolStripMenuItem, dateSettingToolStripMenuItem, selectFontToolStripMenuItem, selectColorToolStripMenuItem, closeToolStripMenuItem });
             contextMenuStrip.Name = "contextMenuStrip1";
             // 
             // settingsToolStripMenuItem
@@ -84,11 +86,17 @@
             panel1.MouseMove += TimeLabel_MouseMove;
             panel1.MouseUp += TimeLabel_MouseUp;
             // 
+            // selectColorToolStripMenuItem
+            // 
+            resources.ApplyResources(selectColorToolStripMenuItem, "selectColorToolStripMenuItem");
+            selectColorToolStripMenuItem.Name = "selectColorToolStripMenuItem";
+            selectColorToolStripMenuItem.Click += selectColorToolStripMenuItem_Click;
+            // 
             // MainForm
             // 
             resources.ApplyResources(this, "$this");
             AutoScaleMode = AutoScaleMode.Dpi;
-            BackColor = SystemColors.ActiveCaption;
+            BackColor = Color.LightSteelBlue;
             ContextMenuStrip = contextMenuStrip;
             Controls.Add(panel1);
             Controls.Add(TimeLabel);
@@ -111,5 +119,7 @@
         private ToolStripMenuItem settingsToolStripMenuItem;
         private ToolStripMenuItem closeToolStripMenuItem;
         private Panel panel1;
+        private ColorDialog colorDialog;
+        private ToolStripMenuItem selectColorToolStripMenuItem;
     }
 }

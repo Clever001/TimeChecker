@@ -8,6 +8,12 @@ namespace TimeCheckerClasses;
 public struct MenuAttrs : ICloneable {
     public bool PrintDate { get; set; } = false;
     [JsonIgnore]
+    public Color Color { get; set; } = Color.LightSteelBlue;
+    public int SerializableColor {
+        get => Color.ToArgb();
+        set => Color = Color.FromArgb(value);
+    }
+    [JsonIgnore]
     public Font Font { get; set; } = new("Segoe UI", 20f);
     public SerializableFont SerializableFont {
         get => new(Font);
@@ -36,16 +42,17 @@ public struct MenuAttrs : ICloneable {
     
     public MenuAttrs() { }
     [JsonConstructor]
-    public MenuAttrs(bool printDate, Font font, RepeatFreq repeatFreq, int waitTime) {
+    public MenuAttrs(bool printDate, Color color, Font font, RepeatFreq repeatFreq, int waitTime) {
         if (waitTime < 0 || waitTime > 4) throw new ArgumentOutOfRangeException(nameof(WaitTime));
 
         PrintDate = printDate;
+        Color = color;
         Font = font;
         RepeatFreq = repeatFreq;
         WaitTime = waitTime;
     }
 
-    public object Clone() => new MenuAttrs(PrintDate, Font, RepeatFreq, WaitTime);
+    public object Clone() => new MenuAttrs(PrintDate, Color, Font, RepeatFreq, WaitTime);
 
     public static void Save(MenuAttrs menuAttrs) {
         string json = JsonSerializer.Serialize(menuAttrs, new JsonSerializerOptions {

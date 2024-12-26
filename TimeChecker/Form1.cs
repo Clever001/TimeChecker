@@ -25,6 +25,8 @@ namespace TimeChecker {
             // »нициализаци€ атрибутов меню
             _menuAttrs = MenuAttrs.Load();
             UpdateFont();
+            BackColor = _menuAttrs.Color;
+            Refresh();
 
             // »нициализаци€ контекстного меню
             dateSettingToolStripMenuItem.Checked = false;
@@ -186,7 +188,7 @@ namespace TimeChecker {
         }
 
         protected override void WndProc(ref Message m) {
-            const int RESIZE_HANDLE_SIZE = 10; // –азмер области дл€ изменени€ размера
+            const int RESIZE_HANDLE_SIZE = 10;
 
             if (m.Msg == NativeMethods.WM_NCHITTEST) {
                 base.WndProc(ref m);
@@ -218,8 +220,17 @@ namespace TimeChecker {
                 return;
             }
 
-            // ≈сли это не WM_NCHITTEST, передаем сообщение базовому классу
             base.WndProc(ref m);
+        }
+
+        private void selectColorToolStripMenuItem_Click(object sender, EventArgs e) {
+            colorDialog.Color = _menuAttrs.Color;
+            colorDialog.ShowDialog();
+            lock (_locker) {
+                _menuAttrs.Color = colorDialog.Color;
+                BackColor = _menuAttrs.Color;
+                Refresh();
+            }
         }
     }
 }
