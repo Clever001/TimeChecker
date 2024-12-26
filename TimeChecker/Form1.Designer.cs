@@ -24,66 +24,76 @@
         /// </summary>
         private void InitializeComponent() {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             TimeLabel = new Label();
             contextMenuStrip = new ContextMenuStrip(components);
             settingsToolStripMenuItem = new ToolStripMenuItem();
             dateSettingToolStripMenuItem = new ToolStripMenuItem();
             selectFontToolStripMenuItem = new ToolStripMenuItem();
+            closeToolStripMenuItem = new ToolStripMenuItem();
             fontDialog = new FontDialog();
+            panel1 = new Panel();
             contextMenuStrip.SuspendLayout();
             SuspendLayout();
             // 
             // TimeLabel
             // 
-            TimeLabel.Dock = DockStyle.Fill;
-            TimeLabel.Font = new Font("Segoe UI", 20.25F, FontStyle.Bold, GraphicsUnit.Point, 204);
+            resources.ApplyResources(TimeLabel, "TimeLabel");
             TimeLabel.ForeColor = Color.White;
-            TimeLabel.Location = new Point(0, 0);
             TimeLabel.Name = "TimeLabel";
-            TimeLabel.Size = new Size(248, 128);
-            TimeLabel.TabIndex = 0;
-            TimeLabel.Text = "label1";
-            TimeLabel.TextAlign = ContentAlignment.MiddleCenter;
+            TimeLabel.MouseDown += TimeLabel_MouseDown;
+            TimeLabel.MouseMove += TimeLabel_MouseMove;
+            TimeLabel.MouseUp += TimeLabel_MouseUp;
             // 
             // contextMenuStrip
             // 
-            contextMenuStrip.Items.AddRange(new ToolStripItem[] { settingsToolStripMenuItem, dateSettingToolStripMenuItem, selectFontToolStripMenuItem });
+            resources.ApplyResources(contextMenuStrip, "contextMenuStrip");
+            contextMenuStrip.Items.AddRange(new ToolStripItem[] { settingsToolStripMenuItem, dateSettingToolStripMenuItem, selectFontToolStripMenuItem, closeToolStripMenuItem });
             contextMenuStrip.Name = "contextMenuStrip1";
-            contextMenuStrip.Size = new Size(165, 70);
             // 
             // settingsToolStripMenuItem
             // 
+            resources.ApplyResources(settingsToolStripMenuItem, "settingsToolStripMenuItem");
             settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            settingsToolStripMenuItem.Size = new Size(164, 22);
-            settingsToolStripMenuItem.Text = "Настройки";
             settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
             // 
             // dateSettingToolStripMenuItem
             // 
+            resources.ApplyResources(dateSettingToolStripMenuItem, "dateSettingToolStripMenuItem");
             dateSettingToolStripMenuItem.Name = "dateSettingToolStripMenuItem";
-            dateSettingToolStripMenuItem.Size = new Size(164, 22);
-            dateSettingToolStripMenuItem.Text = "Отобразить дату";
             dateSettingToolStripMenuItem.Click += dateSettingToolStripMenuItem_Click;
             // 
             // selectFontToolStripMenuItem
             // 
+            resources.ApplyResources(selectFontToolStripMenuItem, "selectFontToolStripMenuItem");
             selectFontToolStripMenuItem.Name = "selectFontToolStripMenuItem";
-            selectFontToolStripMenuItem.Size = new Size(164, 22);
-            selectFontToolStripMenuItem.Text = "Выбрать шрифт";
             selectFontToolStripMenuItem.Click += selectFontToolStripMenuItem_Click;
+            // 
+            // closeToolStripMenuItem
+            // 
+            resources.ApplyResources(closeToolStripMenuItem, "closeToolStripMenuItem");
+            closeToolStripMenuItem.Name = "closeToolStripMenuItem";
+            closeToolStripMenuItem.Click += closeToolStripMenuItem_Click;
+            // 
+            // panel1
+            // 
+            resources.ApplyResources(panel1, "panel1");
+            panel1.BackColor = Color.White;
+            panel1.Name = "panel1";
+            panel1.MouseDown += TimeLabel_MouseDown;
+            panel1.MouseMove += TimeLabel_MouseMove;
+            panel1.MouseUp += TimeLabel_MouseUp;
             // 
             // MainForm
             // 
-            AutoScaleDimensions = new SizeF(96F, 96F);
+            resources.ApplyResources(this, "$this");
             AutoScaleMode = AutoScaleMode.Dpi;
             BackColor = SystemColors.ActiveCaption;
-            ClientSize = new Size(248, 128);
             ContextMenuStrip = contextMenuStrip;
+            Controls.Add(panel1);
             Controls.Add(TimeLabel);
-            MinimumSize = new Size(160, 80);
+            FormBorderStyle = FormBorderStyle.None;
             Name = "MainForm";
-            StartPosition = FormStartPosition.Manual;
-            Text = "TimeChecker";
             TopMost = true;
             FormClosing += MainForm_FormClosing_1;
             Load += MainForm_Load;
@@ -99,5 +109,7 @@
         private ToolStripMenuItem selectFontToolStripMenuItem;
         private FontDialog fontDialog;
         private ToolStripMenuItem settingsToolStripMenuItem;
+        private ToolStripMenuItem closeToolStripMenuItem;
+        private Panel panel1;
     }
 }

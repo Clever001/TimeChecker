@@ -3,6 +3,9 @@ using TimeCheckerClasses;
 
 namespace TimeChecker {
     public partial class MainForm : Form {
+        private bool _isMoving = false;
+        private Point _oldPosition;
+
         private MainFormAttrs _mainFormAttrs;
         private Clock? _clock;
         private MenuAttrs _menuAttrs;
@@ -37,7 +40,8 @@ namespace TimeChecker {
 
             try {
                 _soundPlayer = new SoundPlayer("alarm.wav");
-            } catch {
+            }
+            catch {
                 MessageBox.Show("Неудалось найти мелодию для воспроизведения!", "ERROR");
             }
         }
@@ -81,7 +85,7 @@ namespace TimeChecker {
             }
 
             int waitTime;
-            lock(_locker) { waitTime = _menuAttrs.WaitTime; }
+            lock (_locker) { waitTime = _menuAttrs.WaitTime; }
             TimeLabel.ForeColor = Color.Red;
             TimeLabel.Refresh();
 
@@ -89,7 +93,8 @@ namespace TimeChecker {
 
             try {
                 await Task.Delay(Math.Max(1000 * 60 * waitTime, 60000), _cancellationTokenSource.Token);
-            } catch (TaskCanceledException) {
+            }
+            catch (TaskCanceledException) {
                 // Программа закрывается.
             }
 
@@ -152,6 +157,32 @@ namespace TimeChecker {
             MenuAttrs.Save(_menuAttrs);
             _cancellationTokenSource.Cancel();
             _clock?.Dispose();
+        }
+
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e) => Close();
+
+        private void TimeLabel_MouseDown(object sender, MouseEventArgs e) {
+            if (e.Button.Equals(MouseButtons.Left)) {
+                _isMoving = true;
+                _oldPosition = e.Location;
+            }
+        }
+
+        private void TimeLabel_MouseUp(object sender, MouseEventArgs e) {
+            if (e.Button.Equals(MouseButtons.Left)) {
+                _isMoving = false;
+            }
+        }
+
+        private void TimeLabel_MouseMove(object sender, MouseEventArgs e) {
+            if (_isMoving) {
+                Point p = e.Location;
+                int dx = p.X - _oldPosition.X;
+                int dy = p.Y - _oldPosition.Y;
+                p = Location;
+                p.Offset(dx, dy);
+                Location = p;
+            }
         }
     }
 }
