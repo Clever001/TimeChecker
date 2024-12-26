@@ -184,5 +184,42 @@ namespace TimeChecker {
                 Location = p;
             }
         }
+
+        protected override void WndProc(ref Message m) {
+            const int RESIZE_HANDLE_SIZE = 10; // –азмер области дл€ изменени€ размера
+
+            if (m.Msg == NativeMethods.WM_NCHITTEST) {
+                base.WndProc(ref m);
+
+                Point cursor = PointToClient(new Point(m.LParam.ToInt32()));
+                if (cursor.X <= RESIZE_HANDLE_SIZE) {
+                    if (cursor.Y <= RESIZE_HANDLE_SIZE)
+                        m.Result = (IntPtr)NativeMethods.HTTOPLEFT;
+                    else if (cursor.Y >= this.ClientSize.Height - RESIZE_HANDLE_SIZE)
+                        m.Result = (IntPtr)NativeMethods.HTBOTTOMLEFT;
+                    else
+                        m.Result = (IntPtr)NativeMethods.HTLEFT;
+                }
+                else if (cursor.X >= this.ClientSize.Width - RESIZE_HANDLE_SIZE) {
+                    if (cursor.Y <= RESIZE_HANDLE_SIZE)
+                        m.Result = (IntPtr)NativeMethods.HTTOPRIGHT;
+                    else if (cursor.Y >= this.ClientSize.Height - RESIZE_HANDLE_SIZE)
+                        m.Result = (IntPtr)NativeMethods.HTBOTTOMRIGHT;
+                    else
+                        m.Result = (IntPtr)NativeMethods.HTRIGHT;
+                }
+                else if (cursor.Y <= RESIZE_HANDLE_SIZE) {
+                    m.Result = (IntPtr)NativeMethods.HTTOP;
+                }
+                else if (cursor.Y >= this.ClientSize.Height - RESIZE_HANDLE_SIZE) {
+                    m.Result = (IntPtr)NativeMethods.HTBOTTOM;
+                }
+
+                return;
+            }
+
+            // ≈сли это не WM_NCHITTEST, передаем сообщение базовому классу
+            base.WndProc(ref m);
+        }
     }
 }
